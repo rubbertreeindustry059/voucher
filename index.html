@@ -2,534 +2,369 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Voucher System</title>
-<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <style>
-  :root {
-    --bg: #F7F8FA;
-    --card: #FFFFFF;
-    --primary: #1A5276;
-    --primary-light: #D6EAF8;
-    --success: #1E8449;
-    --success-light: #D5F5E3;
-    --danger: #C0392B;
-    --danger-light: #FADBD8;
-    --warn-light: #FEF9E7;
-    --warn: #B7950B;
-    --text: #1C2833;
-    --text2: #5D6D7E;
-    --border: #E5E8EC;
-    --radius: 16px;
-    --radius-sm: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F7F8FA;color:#1C2833;min-height:100vh}
+.screen{display:none;min-height:100vh;flex-direction:column}
+.screen.active{display:flex}
 
-  /* ===== SCREENS ===== */
-  .screen { display: none; min-height: 100vh; flex-direction: column; }
-  .screen.active { display: flex; }
+/* LOGIN */
+#login{align-items:center;justify-content:center;padding:2rem;background:linear-gradient(160deg,#1A5276 0%,#2E86C1 100%)}
+.login-box{width:100%;max-width:340px}
+.logo{text-align:center;margin-bottom:2.5rem}
+.logo-icon{width:80px;height:80px;background:rgba(255,255,255,0.15);border-radius:24px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;border:2px solid rgba(255,255,255,0.3)}
+.logo h1{font-size:24px;font-weight:700;color:white}
+.logo p{font-size:14px;color:rgba(255,255,255,0.7);margin-top:4px}
+.role-btn{width:100%;padding:16px 20px;border-radius:16px;border:none;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:12px;display:flex;align-items:center;gap:14px;transition:transform .1s,opacity .1s}
+.role-btn:active{transform:scale(0.97);opacity:0.9}
+.role-btn.staff{background:white;color:#1A5276}
+.role-btn.admin{background:rgba(255,255,255,0.15);color:white;border:2px solid rgba(255,255,255,0.4)}
+.role-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.role-btn.staff .role-icon{background:#EBF5FB}
+.role-btn.admin .role-icon{background:rgba(255,255,255,0.15)}
+.btn-label{font-size:15px;font-weight:700;text-align:left}
+.btn-sub{font-size:12px;font-weight:400;opacity:0.6;margin-top:2px}
 
-  /* ===== LOGIN ===== */
-  #login { align-items: center; justify-content: center; padding: 2rem; }
-  .login-box { width: 100%; max-width: 360px; }
-  .logo { text-align: center; margin-bottom: 2.5rem; }
-  .logo-icon { width: 72px; height: 72px; background: var(--primary); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-  .logo-icon svg { width: 38px; height: 38px; fill: white; }
-  .logo h1 { font-size: 22px; font-weight: 700; color: var(--text); }
-  .logo p { font-size: 14px; color: var(--text2); margin-top: 4px; }
-  .role-btn { width: 100%; padding: 16px; border-radius: var(--radius); border: 2px solid var(--border); background: var(--card); font-size: 16px; font-weight: 600; color: var(--text); cursor: pointer; margin-bottom: 12px; transition: all .15s; display: flex; align-items: center; gap: 12px; }
-  .role-btn:active { transform: scale(0.98); }
-  .role-btn.primary { background: var(--primary); color: white; border-color: var(--primary); }
-  .role-btn svg { width: 22px; height: 22px; flex-shrink: 0; }
-  .role-btn .btn-text { text-align: left; }
-  .role-btn .btn-sub { font-size: 12px; font-weight: 400; opacity: 0.7; margin-top: 2px; }
+/* PIN */
+#pin{align-items:center;justify-content:center;padding:2rem;background:#F7F8FA}
+.pin-box{width:100%;max-width:300px;text-align:center}
+.pin-header{margin-bottom:2rem}
+.pin-role-badge{display:inline-block;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;background:#EBF5FB;color:#1A5276;margin-bottom:1rem}
+.pin-title{font-size:22px;font-weight:700;color:#1C2833}
+.pin-dots{display:flex;gap:14px;justify-content:center;margin:1.5rem 0}
+.dot{width:18px;height:18px;border-radius:50%;border:2px solid #BDC3C7;background:white;transition:all .15s}
+.dot.on{background:#1A5276;border-color:#1A5276;transform:scale(1.1)}
+.pin-err{font-size:13px;color:#E74C3C;min-height:20px;margin-bottom:1rem}
+.numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:1.5rem}
+.nk{aspect-ratio:1;border-radius:50%;border:none;background:white;font-size:24px;font-weight:600;color:#1C2833;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:all .1s;display:flex;align-items:center;justify-content:center}
+.nk:active{transform:scale(0.9);background:#EBF5FB}
+.nk.del{font-size:18px;color:#7F8C8D}
+.back{font-size:14px;color:#7F8C8D;cursor:pointer;text-decoration:underline}
 
-  /* ===== PIN ===== */
-  #pin { align-items: center; justify-content: center; padding: 2rem; }
-  .pin-box { width: 100%; max-width: 320px; text-align: center; }
-  .pin-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
-  .pin-sub { font-size: 14px; color: var(--text2); margin-bottom: 2rem; }
-  .pin-dots { display: flex; gap: 12px; justify-content: center; margin-bottom: 2rem; }
-  .pin-dot { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border); background: var(--bg); transition: all .15s; }
-  .pin-dot.filled { background: var(--primary); border-color: var(--primary); }
-  .pin-err { font-size: 13px; color: var(--danger); margin-bottom: 1rem; min-height: 20px; }
-  .numpad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-  .num-btn { aspect-ratio: 1; border-radius: 50%; border: none; background: var(--card); font-size: 22px; font-weight: 600; color: var(--text); cursor: pointer; box-shadow: 0 1px 4px rgba(0,0,0,0.08); transition: all .1s; display: flex; align-items: center; justify-content: center; }
-  .num-btn:active { transform: scale(0.92); background: var(--primary-light); }
-  .num-btn.del { font-size: 16px; color: var(--text2); }
-  .back-link { margin-top: 1.5rem; font-size: 14px; color: var(--text2); cursor: pointer; text-decoration: underline; }
+/* APP */
+.topbar{padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.topbar.staff-bar{background:#1A5276;color:white}
+.topbar.admin-bar{background:#1E8449;color:white}
+.bar-title{font-size:17px;font-weight:700}
+.bar-sub{font-size:12px;opacity:0.7;margin-top:2px}
+.logout{background:rgba(255,255,255,0.2);border:none;color:white;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer}
+.content{flex:1;overflow-y:auto;padding:1rem}
+.bottomnav{background:white;border-top:1px solid #ECF0F1;display:flex;padding:6px 0 max(6px,env(safe-area-inset-bottom))}
+.nb{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;border:none;background:none;font-size:11px;color:#95A5A6;cursor:pointer;padding:6px 0;transition:color .15s;font-family:inherit}
+.nb svg{width:24px;height:24px}
+.nb.on{color:#1A5276}
+.nb.on.admin{color:#1E8449}
+.tab{display:none}
+.tab.on{display:block}
 
-  /* ===== APP SHELL ===== */
-  #staff, #admin { flex-direction: column; }
-  .topbar { background: var(--primary); color: white; padding: 16px 20px 16px; display: flex; align-items: center; justify-content: space-between; }
-  .topbar-title { font-size: 17px; font-weight: 700; }
-  .topbar-sub { font-size: 12px; opacity: 0.7; margin-top: 2px; }
-  .logout-btn { background: rgba(255,255,255,0.15); border: none; color: white; padding: 6px 14px; border-radius: 20px; font-size: 13px; cursor: pointer; }
-  .content { flex: 1; overflow-y: auto; padding: 1rem; }
-  .bottomnav { background: var(--card); border-top: 1px solid var(--border); display: flex; padding: 8px 0 max(8px, env(safe-area-inset-bottom)); }
-  .nav-btn { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; border: none; background: none; font-size: 11px; color: var(--text2); cursor: pointer; padding: 4px 0; transition: color .15s; }
-  .nav-btn svg { width: 24px; height: 24px; }
-  .nav-btn.active { color: var(--primary); }
+/* CARDS */
+.card{background:white;border-radius:16px;padding:1.25rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.06)}
+.sec-title{font-size:12px;font-weight:700;color:#95A5A6;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px}
 
-  /* ===== TABS ===== */
-  .tab-content { display: none; }
-  .tab-content.active { display: block; }
+/* SCAN */
+.scan-hint{font-size:14px;color:#7F8C8D;text-align:center;margin-bottom:1rem}
+#reader{border-radius:12px;overflow:hidden;background:#ECF0F1}
+.scan-btn{width:100%;padding:16px;background:#1A5276;color:white;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;margin-top:1rem;transition:all .15s}
+.scan-btn:active{transform:scale(0.97)}
+.scan-btn.stop{background:#E74C3C}
+.result-box{border-radius:14px;padding:1.25rem;margin-top:1rem;border:2px solid #ECF0F1}
+.result-box.found{border-color:#27AE60;background:#EAFAF1}
+.result-box.err{border-color:#E74C3C;background:#FDEDEC}
+.result-box.done{border-color:#27AE60;background:#EAFAF1}
+.result-code{font-size:22px;font-weight:800;font-family:monospace;color:#1A5276;margin:8px 0}
+.confirm-btn{width:100%;padding:14px;background:#27AE60;color:white;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;margin-top:10px}
+.confirm-btn:active{transform:scale(0.97)}
+.rescan-btn{width:100%;padding:11px;background:none;color:#7F8C8D;border:1.5px solid #ECF0F1;border-radius:12px;font-size:14px;cursor:pointer;margin-top:8px;font-family:inherit}
 
-  /* ===== SCAN ===== */
-  .scan-card { background: var(--card); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
-  .scan-label { font-size: 14px; color: var(--text2); margin-bottom: 1rem; text-align: center; }
-  #reader { border-radius: var(--radius-sm); overflow: hidden; }
-  .scan-btn { width: 100%; padding: 16px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-size: 16px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; transition: all .15s; }
-  .scan-btn:active { transform: scale(0.97); background: #154360; }
-  .scan-btn svg { width: 22px; height: 22px; fill: white; }
-  .scan-result { background: var(--card); border-radius: var(--radius); padding: 1.25rem; margin-top: 1rem; border: 2px solid var(--border); }
-  .scan-result.success { border-color: var(--success); background: var(--success-light); }
-  .scan-result.error { border-color: var(--danger); background: var(--danger-light); }
-  .result-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-  .result-code { font-size: 20px; font-weight: 700; font-family: monospace; color: var(--primary); margin: 8px 0; }
-  .confirm-btn { width: 100%; padding: 14px; background: var(--success); color: white; border: none; border-radius: var(--radius-sm); font-size: 15px; font-weight: 700; cursor: pointer; margin-top: 12px; transition: all .15s; }
-  .confirm-btn:active { transform: scale(0.97); }
-  .rescan-btn { width: 100%; padding: 12px; background: none; color: var(--text2); border: 1.5px solid var(--border); border-radius: var(--radius-sm); font-size: 14px; cursor: pointer; margin-top: 8px; }
+/* HISTORY */
+.h-item{background:white;border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.h-dot{width:10px;height:10px;border-radius:50%;background:#27AE60;flex-shrink:0}
+.h-code{font-size:15px;font-weight:700;font-family:monospace;color:#1A5276}
+.h-time{font-size:12px;color:#95A5A6;margin-top:2px}
+.empty{text-align:center;padding:3rem 1rem;color:#BDC3C7;font-size:14px}
 
-  /* ===== HISTORY ===== */
-  .history-item { background: var(--card); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; }
-  .history-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--success); flex-shrink: 0; }
-  .history-code { font-size: 15px; font-weight: 700; font-family: monospace; color: var(--primary); }
-  .history-meta { font-size: 12px; color: var(--text2); margin-top: 2px; }
-  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--text2); }
-  .empty-state svg { width: 48px; height: 48px; margin-bottom: 1rem; opacity: 0.3; }
+/* STATS */
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.stat{background:white;border-radius:12px;padding:14px 8px;text-align:center;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.stat-n{font-size:28px;font-weight:800}
+.stat-n.blue{color:#1A5276}
+.stat-n.green{color:#1E8449}
+.stat-n.amber{color:#B7950B}
+.stat-l{font-size:11px;color:#95A5A6;margin-top:2px}
 
-  /* ===== ADMIN STATS ===== */
-  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 1rem; }
-  .stat-card { background: var(--card); border-radius: var(--radius-sm); padding: 14px 10px; text-align: center; }
-  .stat-num { font-size: 26px; font-weight: 800; }
-  .stat-num.blue { color: var(--primary); }
-  .stat-num.green { color: var(--success); }
-  .stat-num.amber { color: var(--warn); }
-  .stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+/* VOUCHER LIST */
+.v-item{background:white;border-radius:12px;padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;box-shadow:0 1px 3px rgba(0,0,0,0.05)}
+.v-code{font-size:14px;font-weight:700;font-family:monospace;color:#1C2833;flex:1}
+.v-time{font-size:11px;color:#95A5A6;margin-top:2px}
+.badge{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600}
+.used{background:#D5F5E3;color:#1E8449}
+.unused{background:#FEF9E7;color:#B7950B}
 
-  /* ===== ADMIN TABLE ===== */
-  .voucher-item { background: var(--card); border-radius: var(--radius-sm); padding: 14px 16px; margin-bottom: 8px; display: flex; align-items: center; gap: 12px; }
-  .voucher-code { font-size: 15px; font-weight: 700; font-family: monospace; color: var(--text); flex: 1; }
-  .voucher-meta { font-size: 11px; color: var(--text2); margin-top: 2px; }
-  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
-  .badge-used { background: var(--success-light); color: var(--success); }
-  .badge-unused { background: var(--warn-light); color: var(--warn); }
+/* CREATE */
+.form-label{font-size:12px;font-weight:700;color:#7F8C8D;text-transform:uppercase;letter-spacing:0.5px;display:block;margin-bottom:6px}
+.form-input{width:100%;padding:13px 14px;border-radius:12px;border:1.5px solid #ECF0F1;font-size:15px;color:#1C2833;background:#F7F8FA;margin-bottom:1rem;outline:none;font-family:inherit}
+.form-input:focus{border-color:#1A5276;background:white}
+.create-btn{width:100%;padding:15px;background:#1E8449;color:white;border:none;border-radius:14px;font-size:15px;font-weight:700;cursor:pointer;font-family:inherit}
+.create-btn:active{transform:scale(0.97)}
+.created-list{background:#EAFAF1;border:1.5px solid #27AE60;border-radius:12px;padding:1rem;margin-top:1rem}
+.created-title{font-size:14px;font-weight:700;color:#1E8449;margin-bottom:8px}
+.created-code{font-family:monospace;font-size:13px;color:#1A5276;padding:3px 0}
 
-  /* ===== CREATE ===== */
-  .form-card { background: var(--card); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 1rem; }
-  .form-label { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 6px; display: block; text-transform: uppercase; letter-spacing: 0.5px; }
-  .form-input { width: 100%; padding: 12px 14px; border-radius: var(--radius-sm); border: 1.5px solid var(--border); font-size: 15px; color: var(--text); background: var(--bg); margin-bottom: 1rem; outline: none; }
-  .form-input:focus { border-color: var(--primary); }
-  .create-btn { width: 100%; padding: 15px; background: var(--primary); color: white; border: none; border-radius: var(--radius); font-size: 15px; font-weight: 700; cursor: pointer; }
+/* LOADING */
+.loading{display:flex;align-items:center;justify-content:center;padding:2rem}
+.spinner{width:28px;height:28px;border:3px solid #ECF0F1;border-top-color:#1A5276;border-radius:50%;animation:spin .6s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-  /* ===== TOAST ===== */
-  .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1C2833; color: white; padding: 12px 24px; border-radius: 30px; font-size: 14px; font-weight: 600; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; white-space: nowrap; }
-  .toast.show { opacity: 1; }
-
-  /* ===== LOADING ===== */
-  .loading { display: flex; align-items: center; justify-content: center; padding: 2rem; }
-  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-
-  .section-title { font-size: 13px; font-weight: 700; color: var(--text2); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; margin-top: 4px; }
+/* TOAST */
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1C2833;color:white;padding:12px 24px;border-radius:30px;font-size:14px;font-weight:600;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- ===== LOGIN ===== -->
+<!-- LOGIN -->
 <div id="login" class="screen active">
   <div class="login-box">
     <div class="logo">
       <div class="logo-icon">
-        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V6h16v12zM6 10h2v2H6zm0 4h8v2H6zm4-4h2v2h-2zm4 0h4v2h-4z"/></svg>
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="white"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 3c1.93 0 3.5 1.57 3.5 3.5S14.93 14 13 14s-3.5-1.57-3.5-3.5S11.07 7 13 7zm-7 12c0-2 4-3.1 7-3.1s7 1.1 7 3.1v1H6v-1z"/></svg>
       </div>
       <h1>Voucher System</h1>
       <p>เลือกบทบาทของคุณ</p>
     </div>
-    <button class="role-btn primary" onclick="goPin('staff')">
-      <svg viewBox="0 0 24 24" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 14.5v-9l6 4.5-6 4.5z"/></svg>
-      <div class="btn-text">
-        <div>เข้าสู่ระบบ Staff</div>
-        <div class="btn-sub">สแกน QR และยืนยันการใช้</div>
-      </div>
+    <button class="role-btn staff" onclick="goPin('staff')">
+      <div class="role-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="#1A5276"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg></div>
+      <div><div class="btn-label">Staff</div><div class="btn-sub">สแกน QR และยืนยันการใช้</div></div>
     </button>
-    <button class="role-btn" onclick="goPin('admin')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 4l5 2.18V11c0 3.5-2.33 6.79-5 7.93-2.67-1.14-5-4.43-5-7.93V7.18L12 5z"/></svg>
-      <div class="btn-text">
-        <div>เข้าสู่ระบบ Admin</div>
-        <div class="btn-sub">จัดการและดูข้อมูลทั้งหมด</div>
-      </div>
+    <button class="role-btn admin" onclick="goPin('admin')">
+      <div class="role-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg></div>
+      <div><div class="btn-label">Admin</div><div class="btn-sub">จัดการและดูข้อมูลทั้งหมด</div></div>
     </button>
   </div>
 </div>
 
-<!-- ===== PIN ===== -->
+<!-- PIN -->
 <div id="pin" class="screen">
   <div class="pin-box">
-    <div class="pin-title" id="pin-title">กรอก PIN</div>
-    <div class="pin-sub" id="pin-sub">กรุณากรอก PIN 4 หลัก</div>
+    <div class="pin-header">
+      <div class="pin-role-badge" id="pin-badge">Staff</div>
+      <div class="pin-title">กรอก PIN</div>
+    </div>
     <div class="pin-dots">
-      <div class="pin-dot" id="d0"></div>
-      <div class="pin-dot" id="d1"></div>
-      <div class="pin-dot" id="d2"></div>
-      <div class="pin-dot" id="d3"></div>
+      <div class="dot" id="d0"></div><div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div><div class="dot" id="d3"></div>
     </div>
     <div class="pin-err" id="pin-err"></div>
     <div class="numpad">
-      <button class="num-btn" onclick="pressNum('1')">1</button>
-      <button class="num-btn" onclick="pressNum('2')">2</button>
-      <button class="num-btn" onclick="pressNum('3')">3</button>
-      <button class="num-btn" onclick="pressNum('4')">4</button>
-      <button class="num-btn" onclick="pressNum('5')">5</button>
-      <button class="num-btn" onclick="pressNum('6')">6</button>
-      <button class="num-btn" onclick="pressNum('7')">7</button>
-      <button class="num-btn" onclick="pressNum('8')">8</button>
-      <button class="num-btn" onclick="pressNum('9')">9</button>
-      <button class="num-btn" onclick="pressNum('')"></button>
-      <button class="num-btn" onclick="pressNum('0')">0</button>
-      <button class="num-btn del" onclick="delNum()">⌫</button>
+      <button class="nk" onclick="pressNum('1')">1</button>
+      <button class="nk" onclick="pressNum('2')">2</button>
+      <button class="nk" onclick="pressNum('3')">3</button>
+      <button class="nk" onclick="pressNum('4')">4</button>
+      <button class="nk" onclick="pressNum('5')">5</button>
+      <button class="nk" onclick="pressNum('6')">6</button>
+      <button class="nk" onclick="pressNum('7')">7</button>
+      <button class="nk" onclick="pressNum('8')">8</button>
+      <button class="nk" onclick="pressNum('9')">9</button>
+      <button class="nk" onclick="()=>{}"></button>
+      <button class="nk" onclick="pressNum('0')">0</button>
+      <button class="nk del" onclick="delNum()">⌫</button>
     </div>
-    <div class="back-link" onclick="showScreen('login')">← ย้อนกลับ</div>
+    <div class="back" onclick="show('login')">← ย้อนกลับ</div>
   </div>
 </div>
 
-<!-- ===== STAFF ===== -->
+<!-- STAFF -->
 <div id="staff" class="screen">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title">Staff Portal</div>
-      <div class="topbar-sub" id="staff-email-label">Staff</div>
-    </div>
-    <button class="logout-btn" onclick="logout()">ออก</button>
+  <div class="topbar staff-bar">
+    <div><div class="bar-title">Staff</div><div class="bar-sub">ระบบสแกน Voucher</div></div>
+    <button class="logout" onclick="logout()">ออกจากระบบ</button>
   </div>
   <div class="content">
-    <!-- TAB: SCAN -->
-    <div id="tab-scan" class="tab-content active">
-      <div class="scan-card">
-        <div class="scan-label">ให้ลูกค้าแสดง QR Code แล้วกดสแกน</div>
+    <div id="t-scan" class="tab on">
+      <div class="card">
+        <div class="scan-hint">ให้ลูกค้าแสดง QR แล้วกดสแกน</div>
         <div id="reader"></div>
       </div>
       <button class="scan-btn" id="scan-btn" onclick="toggleScan()">
-        <svg viewBox="0 0 24 24"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5zm-6 8h1.5v1.5H13V13zm1.5 1.5H16V16h-1.5v-1.5zM16 13h1.5v1.5H16V13zm-3 3h1.5v1.5H13V16zm1.5 1.5H16V19h-1.5v-1.5zM16 16h1.5v1.5H16V16zm1.5-1.5H19V16h-1.5v-1.5zm0 3H19V19h-1.5v-1.5z"/></svg>
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg>
         เปิดกล้องสแกน QR
       </button>
-      <div id="scan-result" style="display:none"></div>
+      <div id="result" style="display:none"></div>
     </div>
-
-    <!-- TAB: HISTORY -->
-    <div id="tab-history" class="tab-content">
-      <div class="section-title">ประวัติการใช้ Voucher</div>
-      <div id="history-list"><div class="loading"><div class="spinner"></div></div></div>
+    <div id="t-hist" class="tab">
+      <div class="sec-title">ประวัติการใช้</div>
+      <div id="hist-list"><div class="loading"><div class="spinner"></div></div></div>
     </div>
   </div>
   <div class="bottomnav">
-    <button class="nav-btn active" id="nav-scan" onclick="switchStaffTab('scan')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg>
-      สแกน
+    <button class="nb on" id="nb-scan" onclick="staffTab('scan')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg>สแกน
     </button>
-    <button class="nav-btn" id="nav-history" onclick="switchStaffTab('history')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-      ประวัติ
+    <button class="nb" id="nb-hist" onclick="staffTab('hist')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>ประวัติ
     </button>
   </div>
 </div>
 
-<!-- ===== ADMIN ===== -->
+<!-- ADMIN -->
 <div id="admin" class="screen">
-  <div class="topbar">
-    <div>
-      <div class="topbar-title">Admin Panel</div>
-      <div class="topbar-sub">จัดการ Voucher</div>
-    </div>
-    <button class="logout-btn" onclick="logout()">ออก</button>
+  <div class="topbar admin-bar">
+    <div><div class="bar-title">Admin</div><div class="bar-sub">จัดการ Voucher</div></div>
+    <button class="logout" onclick="logout()">ออกจากระบบ</button>
   </div>
   <div class="content">
-    <!-- TAB: DASHBOARD -->
-    <div id="tab-dashboard" class="tab-content active">
-      <div class="section-title">ภาพรวม</div>
-      <div class="stats-grid">
-        <div class="stat-card"><div class="stat-num blue" id="stat-total">-</div><div class="stat-label">ทั้งหมด</div></div>
-        <div class="stat-card"><div class="stat-num green" id="stat-used">-</div><div class="stat-label">ใช้แล้ว</div></div>
-        <div class="stat-card"><div class="stat-num amber" id="stat-unused">-</div><div class="stat-label">ยังไม่ใช้</div></div>
+    <div id="t-dash" class="tab on">
+      <div class="stats">
+        <div class="stat"><div class="stat-n blue" id="s-total">-</div><div class="stat-l">ทั้งหมด</div></div>
+        <div class="stat"><div class="stat-n green" id="s-used">-</div><div class="stat-l">ใช้แล้ว</div></div>
+        <div class="stat"><div class="stat-n amber" id="s-unused">-</div><div class="stat-l">ยังไม่ใช้</div></div>
       </div>
-      <div class="section-title" style="margin-top:1rem">รายการทั้งหมด</div>
-      <div id="admin-list"><div class="loading"><div class="spinner"></div></div></div>
+      <div class="sec-title">รายการทั้งหมด</div>
+      <div id="v-list"><div class="loading"><div class="spinner"></div></div></div>
     </div>
-
-    <!-- TAB: CREATE -->
-    <div id="tab-create" class="tab-content">
-      <div class="form-card">
-        <label class="form-label">Prefix รหัส</label>
-        <input class="form-input" id="prefix-input" placeholder="เช่น VIP, SPA, GIFT" maxlength="10">
+    <div id="t-create" class="tab">
+      <div class="card">
+        <label class="form-label">Prefix รหัส (เช่น VIP, SPA)</label>
+        <input class="form-input" id="inp-prefix" placeholder="VIP" maxlength="10">
         <label class="form-label">จำนวนที่ต้องการสร้าง</label>
-        <input class="form-input" id="count-input" type="number" placeholder="เช่น 10" min="1" max="100">
-        <button class="create-btn" onclick="createVouchers()">สร้าง Voucher</button>
+        <input class="form-input" id="inp-count" type="number" placeholder="10" min="1" max="100">
+        <button class="create-btn" onclick="doCreate()">+ สร้าง Voucher</button>
       </div>
-      <div id="create-result"></div>
+      <div id="create-res"></div>
     </div>
   </div>
   <div class="bottomnav">
-    <button class="nav-btn active" id="nav-dashboard" onclick="switchAdminTab('dashboard')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>
-      Dashboard
+    <button class="nb on admin" id="nb-dash" onclick="adminTab('dash')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M3 13h8V3H3v10zm0 8h8v-6H3v6zm10 0h8V11h-8v10zm0-18v6h8V3h-8z"/></svg>Dashboard
     </button>
-    <button class="nav-btn" id="nav-create" onclick="switchAdminTab('create')">
-      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>
-      สร้าง Voucher
+    <button class="nb" id="nb-create" onclick="adminTab('create')">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-2 10h-4v4h-2v-4H7v-2h4V7h2v4h4v2z"/></svg>สร้าง
     </button>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
 <script>
-// ===== CONFIG =====
-const API_URL = 'AKfycbzqlw-90kXB6MuiRLLSsRgRXySc1j7xwAUjtTFo2bCcpQWxCnBL-qzJrgrt9EB4sqIi'; // ← เปลี่ยนตรงนี้หลัง deploy Apps Script
+var role=null, pin='', pendingRole=null, scanner=null, scanning=false, scanned=null;
 
-// ===== STATE =====
-let currentRole = null;
-let currentPin = '';
-let pendingRole = null;
-let scanner = null;
-let scanning = false;
-let scannedCode = null;
+function show(id){document.querySelectorAll('.screen').forEach(function(s){s.classList.remove('active')});document.getElementById(id).classList.add('active')}
+function toast(m,d){var t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(function(){t.classList.remove('show')},d||2500)}
 
-// ===== UTILS =====
-function showScreen(id) {
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function api(action,params,cb){
+  var body=Object.assign({action:action},params||{});
+  google.script.run
+    .withSuccessHandler(cb)
+    .withFailureHandler(function(e){cb({ok:false,msg:e.message})})
+    .processRequest(JSON.stringify(body));
 }
 
-function toast(msg, dur = 2500) {
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), dur);
-}
-
-async function api(action, params = {}) {
-  const r = await fetch(API_URL, {
-    method: 'POST',
-    body: JSON.stringify({ action, ...params })
-  });
-  return r.json();
-}
-
-// ===== LOGIN =====
-function goPin(role) {
-  pendingRole = role;
-  currentPin = '';
-  document.getElementById('pin-title').textContent = role === 'staff' ? 'Staff PIN' : 'Admin PIN';
-  document.getElementById('pin-sub').textContent = 'กรุณากรอก PIN 4 หลัก';
-  document.getElementById('pin-err').textContent = '';
-  updateDots();
-  showScreen('pin');
-}
-
-function pressNum(n) {
-  if (!n || currentPin.length >= 4) return;
-  currentPin += n;
-  updateDots();
-  if (currentPin.length === 4) submitPin();
-}
-
-function delNum() {
-  currentPin = currentPin.slice(0, -1);
-  updateDots();
-  document.getElementById('pin-err').textContent = '';
-}
-
-function updateDots() {
-  for (let i = 0; i < 4; i++) {
-    document.getElementById('d' + i).classList.toggle('filled', i < currentPin.length);
-  }
-}
-
-async function submitPin() {
-  const res = await api('login', { pin: currentPin });
-  if (res.ok && res.role === pendingRole) {
-    currentRole = res.role;
-    if (currentRole === 'staff') {
-      showScreen('staff');
-      loadHistory();
-    } else {
-      showScreen('admin');
-      loadAdmin();
+function goPin(r){pendingRole=r;pin='';document.getElementById('pin-badge').textContent=r==='staff'?'Staff':'Admin';document.getElementById('pin-err').textContent='';updateDots();show('pin')}
+function pressNum(n){if(pin.length>=4)return;pin+=n;updateDots();if(pin.length===4)submitPin()}
+function delNum(){pin=pin.slice(0,-1);updateDots();document.getElementById('pin-err').textContent=''}
+function updateDots(){for(var i=0;i<4;i++)document.getElementById('d'+i).classList.toggle('on',i<pin.length)}
+function submitPin(){
+  api('login',{pin:pin},function(r){
+    if(r.ok&&r.role===pendingRole){
+      role=r.role;
+      if(role==='staff'){show('staff');loadHist()}
+      else{show('admin');loadAdmin()}
+    }else{
+      document.getElementById('pin-err').textContent='PIN ไม่ถูกต้อง ลองใหม่';
+      pin='';updateDots();
     }
-  } else {
-    document.getElementById('pin-err').textContent = 'PIN ไม่ถูกต้อง ลองใหม่อีกครั้ง';
-    currentPin = '';
-    updateDots();
-  }
-}
-
-function logout() {
-  if (scanner) { scanner.stop(); scanner = null; scanning = false; }
-  currentRole = null;
-  currentPin = '';
-  showScreen('login');
-}
-
-// ===== SCAN =====
-function toggleScan() {
-  if (scanning) {
-    stopScan();
-  } else {
-    startScan();
-  }
-}
-
-function startScan() {
-  document.getElementById('scan-result').style.display = 'none';
-  scannedCode = null;
-  scanning = true;
-  document.getElementById('scan-btn').innerHTML = `
-    <svg viewBox="0 0 24 24" fill="white" style="width:22px;height:22px"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
-    หยุดสแกน
-  `;
-  document.getElementById('scan-btn').style.background = '#C0392B';
-
-  scanner = new Html5Qrcode('reader');
-  scanner.start(
-    { facingMode: 'environment' },
-    { fps: 10, qrbox: { width: 220, height: 220 } },
-    (code) => onScan(code),
-    () => {}
-  ).catch(() => toast('ไม่สามารถเปิดกล้องได้'));
-}
-
-function stopScan() {
-  scanning = false;
-  document.getElementById('scan-btn').innerHTML = `
-    <svg viewBox="0 0 24 24" fill="white" style="width:22px;height:22px"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg>
-    เปิดกล้องสแกน QR
-  `;
-  document.getElementById('scan-btn').style.background = '';
-  if (scanner) { scanner.stop().catch(() => {}); scanner = null; }
-}
-
-function onScan(code) {
-  stopScan();
-  scannedCode = code;
-  const el = document.getElementById('scan-result');
-  el.style.display = 'block';
-  el.className = 'scan-result';
-  el.innerHTML = `
-    <div style="font-size:13px;color:var(--text2)">พบ QR Code</div>
-    <div class="result-code">${code}</div>
-    <button class="confirm-btn" onclick="confirmVoucher()">✓ ยืนยันการใช้ Voucher</button>
-    <button class="rescan-btn" onclick="rescan()">สแกนใหม่</button>
-  `;
-}
-
-async function confirmVoucher() {
-  if (!scannedCode) return;
-  const res = await api('scanVoucher', { code: scannedCode, staffEmail: 'staff' });
-  const el = document.getElementById('scan-result');
-  if (res.ok) {
-    el.className = 'scan-result success';
-    el.innerHTML = `
-      <div style="font-size:15px;font-weight:700;color:var(--success)">✓ ยืนยันสำเร็จ!</div>
-      <div class="result-code">${res.code}</div>
-      <div style="font-size:13px;color:var(--success)">เวลา: ${res.time}</div>
-      <button class="rescan-btn" style="margin-top:12px" onclick="rescan()">สแกนรายการถัดไป</button>
-    `;
-    loadHistory();
-    toast('✓ ยืนยัน Voucher สำเร็จ!');
-  } else {
-    el.className = 'scan-result error';
-    el.innerHTML = `
-      <div style="font-size:15px;font-weight:700;color:var(--danger)">✗ ${res.msg}</div>
-      <div class="result-code">${scannedCode}</div>
-      <button class="rescan-btn" style="margin-top:12px" onclick="rescan()">สแกนใหม่</button>
-    `;
-  }
-  scannedCode = null;
-}
-
-function rescan() {
-  document.getElementById('scan-result').style.display = 'none';
-  scannedCode = null;
-}
-
-// ===== HISTORY =====
-async function loadHistory() {
-  const res = await api('getHistory');
-  const el = document.getElementById('history-list');
-  if (!res.ok || !res.rows.length) {
-    el.innerHTML = `<div class="empty-state"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9z"/></svg><div>ยังไม่มีประวัติการใช้</div></div>`;
-    return;
-  }
-  el.innerHTML = res.rows.map(r => `
-    <div class="history-item">
-      <div class="history-dot"></div>
-      <div>
-        <div class="history-code">${r.code}</div>
-        <div class="history-meta">${r.time}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ===== ADMIN =====
-async function loadAdmin() {
-  const res = await api('getAll');
-  if (!res.ok) return;
-  document.getElementById('stat-total').textContent = res.total;
-  document.getElementById('stat-used').textContent = res.used;
-  document.getElementById('stat-unused').textContent = res.unused;
-  const el = document.getElementById('admin-list');
-  if (!res.rows.length) {
-    el.innerHTML = `<div class="empty-state">ยังไม่มี Voucher</div>`;
-    return;
-  }
-  el.innerHTML = res.rows.map(r => `
-    <div class="voucher-item">
-      <div style="flex:1">
-        <div class="voucher-code">${r.code}</div>
-        <div class="voucher-meta">${r.time ? r.time + ' · ' + r.staff : 'ยังไม่ถูกใช้'}</div>
-      </div>
-      <span class="badge ${r.status === 'ใช้แล้ว' ? 'badge-used' : 'badge-unused'}">${r.status}</span>
-    </div>
-  `).join('');
-}
-
-async function createVouchers() {
-  const prefix = document.getElementById('prefix-input').value.trim() || 'VC';
-  const count = parseInt(document.getElementById('count-input').value) || 0;
-  if (count < 1 || count > 100) { toast('กรุณากรอกจำนวน 1-100'); return; }
-  const res = await api('createVouchers', { prefix, count });
-  const el = document.getElementById('create-result');
-  if (res.ok) {
-    el.innerHTML = `
-      <div class="form-card" style="background:var(--success-light);border:1.5px solid var(--success)">
-        <div style="font-weight:700;color:var(--success);margin-bottom:8px">✓ สร้างสำเร็จ ${res.created.length} รายการ</div>
-        ${res.created.map(c => `<div style="font-family:monospace;font-size:14px;color:var(--primary);padding:2px 0">${c}</div>`).join('')}
-      </div>
-    `;
-    loadAdmin();
-    toast(`สร้าง Voucher ${count} รายการสำเร็จ`);
-  }
-}
-
-// ===== TAB SWITCH =====
-function switchStaffTab(tab) {
-  ['scan','history'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
   });
-  if (tab === 'history') loadHistory();
-  if (tab === 'scan' && scanning) stopScan();
+}
+function logout(){if(scanner){scanner.stop().catch(function(){});scanner=null;scanning=false}role=null;pin='';show('login')}
+
+function toggleScan(){scanning?stopScan():startScan()}
+function startScan(){
+  scanning=true;scanned=null;
+  document.getElementById('result').style.display='none';
+  var btn=document.getElementById('scan-btn');
+  btn.className='scan-btn stop';
+  btn.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg> หยุดสแกน';
+  scanner=new Html5Qrcode('reader');
+  scanner.start({facingMode:'environment'},{fps:10,qrbox:{width:220,height:220}},function(code){onScan(code)},function(){}).catch(function(){toast('ไม่สามารถเปิดกล้องได้')});
+}
+function stopScan(){
+  scanning=false;
+  var btn=document.getElementById('scan-btn');
+  btn.className='scan-btn';
+  btn.innerHTML='<svg width="22" height="22" viewBox="0 0 24 24" fill="white"><path d="M9.5 6.5v3h-3v-3h3M11 5H5v6h6V5zm-1.5 9.5v3h-3v-3h3M11 13H5v6h6v-6zm6.5-6.5v3h-3v-3h3M19 5h-6v6h6V5z"/></svg> เปิดกล้องสแกน QR';
+  if(scanner){scanner.stop().catch(function(){});scanner=null}
+}
+function onScan(code){
+  stopScan();scanned=code;
+  var el=document.getElementById('result');
+  el.style.display='block';el.className='result-box found';
+  el.innerHTML='<div style="font-size:13px;color:#27AE60;font-weight:600">พบ QR Code</div><div class="result-code">'+code+'</div><button class="confirm-btn" onclick="doConfirm()">✓ ยืนยันการใช้ Voucher</button><button class="rescan-btn" onclick="resetScan()">สแกนใหม่</button>';
+}
+function doConfirm(){
+  if(!scanned)return;
+  api('scanVoucher',{code:scanned},function(r){
+    var el=document.getElementById('result');
+    if(r.ok){
+      el.className='result-box done';
+      el.innerHTML='<div style="font-size:16px;font-weight:700;color:#1E8449">✓ ยืนยันสำเร็จ!</div><div class="result-code">'+r.code+'</div><div style="font-size:13px;color:#27AE60">'+r.time+'</div><button class="rescan-btn" style="margin-top:12px" onclick="resetScan()">สแกนรายการถัดไป</button>';
+      loadHist();toast('✓ Voucher ยืนยันสำเร็จ!');
+    }else{
+      el.className='result-box err';
+      el.innerHTML='<div style="font-size:15px;font-weight:700;color:#E74C3C">✗ '+r.msg+'</div><div class="result-code">'+scanned+'</div><button class="rescan-btn" style="margin-top:12px" onclick="resetScan()">สแกนใหม่</button>';
+    }
+    scanned=null;
+  });
+}
+function resetScan(){document.getElementById('result').style.display='none';scanned=null}
+
+function loadHist(){
+  api('getHistory',{},function(r){
+    var el=document.getElementById('hist-list');
+    if(!r.ok||!r.rows.length){el.innerHTML='<div class="empty">ยังไม่มีประวัติการใช้</div>';return}
+    el.innerHTML=r.rows.map(function(x){return'<div class="h-item"><div class="h-dot"></div><div><div class="h-code">'+x.code+'</div><div class="h-time">'+x.time+'</div></div></div>'}).join('');
+  });
+}
+function loadAdmin(){
+  api('getAll',{},function(r){
+    if(!r.ok)return;
+    document.getElementById('s-total').textContent=r.total;
+    document.getElementById('s-used').textContent=r.used;
+    document.getElementById('s-unused').textContent=r.unused;
+    var el=document.getElementById('v-list');
+    if(!r.rows.length){el.innerHTML='<div class="empty">ยังไม่มี Voucher</div>';return}
+    el.innerHTML=r.rows.map(function(x){return'<div class="v-item"><div><div class="v-code">'+x.code+'</div><div class="v-time">'+(x.time||'ยังไม่ถูกใช้')+'</div></div><span class="badge '+(x.status==='ใช้แล้ว'?'used':'unused')+'">'+x.status+'</span></div>'}).join('');
+  });
+}
+function doCreate(){
+  var p=document.getElementById('inp-prefix').value.trim()||'VC';
+  var n=parseInt(document.getElementById('inp-count').value)||0;
+  if(n<1||n>100){toast('กรุณากรอกจำนวน 1-100');return}
+  api('createVouchers',{prefix:p,count:n},function(r){
+    if(r.ok){
+      document.getElementById('create-res').innerHTML='<div class="created-list"><div class="created-title">✓ สร้างสำเร็จ '+r.created.length+' รายการ</div>'+r.created.map(function(c){return'<div class="created-code">'+c+'</div>'}).join('')+'</div>';
+      loadAdmin();toast('สร้าง Voucher '+n+' รายการสำเร็จ');
+    }else{toast('เกิดข้อผิดพลาด: '+r.msg)}
+  });
 }
 
-function switchAdminTab(tab) {
-  ['dashboard','create'].forEach(t => {
-    document.getElementById('tab-'+t).classList.toggle('active', t===tab);
-    document.getElementById('nav-'+t).classList.toggle('active', t===tab);
+function staffTab(t){
+  ['scan','hist'].forEach(function(x){
+    document.getElementById('t-'+x).classList.toggle('on',x===t);
+    document.getElementById('nb-'+x).classList.toggle('on',x===t);
   });
-  if (tab === 'dashboard') loadAdmin();
+  if(t==='hist')loadHist();
+  if(t==='scan'&&scanning)stopScan();
+}
+function adminTab(t){
+  ['dash','create'].forEach(function(x){
+    document.getElementById('t-'+x).classList.toggle('on',x===t);
+    document.getElementById('nb-'+x).classList.toggle('on',x===t);
+    document.getElementById('nb-'+x).classList.toggle('admin',x===t);
+  });
+  if(t==='dash')loadAdmin();
 }
 </script>
 </body>
